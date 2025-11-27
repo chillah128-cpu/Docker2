@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>WildPark — городской зоопарк</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root {
+      --bg: #0f1115;
+      --bg-soft: #15171d;
+      --card: #181b22;
+      --accent: #4ade80;
+      --accent-2: #22d3ee;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --border: #2a2e37;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: radial-gradient(circle at top, #161821 0%, #0f1115 60%);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    .page { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+    /* HEADER --------------------------------------------- */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-soft);
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    nav {
+      display: flex;
+      gap: 14px;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+    }
+
+    /* HERO ------------------------------------------------ */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 24px;
+      margin-bottom: 40px;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+    }
+
+    .hero-text h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .hero-text p {
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .btn-main {
+      padding: 10px 18px;
+      background: linear-gradient(to right, #4ade80, #22d3ee);
+      border: none;
+      font-size: 15px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #0f1115;
+      box-shadow: 0 12px 28px rgba(34,215,150,0.3);
+    }
+
+    .hero-photo {
+      background-size: cover;
+      background-position: center;
+      border-radius: 16px;
+      height: 260px;
+      border: 1px solid var(--border);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+      background-image: url('https://images.pexels.com/photos/145939/pexels-photo-145939.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    }
+
+    /* ANIMALS -------------------------------------------- */
+    .section {
+      margin-top: 40px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .animals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+      margin-bottom: 15px;
+    }
+
+    .animal-card {
+      background: var(--card);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 14px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+    }
+
+    .animal-photo {
+      height: 160px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .animal-name {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .animal-desc {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* TICKETS -------------------------------------------- */
+    .tickets {
+      background: var(--bg-soft);
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      margin-top: 22px;
+    }
+
+    .ticket-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #2a2e37;
+    }
+
+    .ticket-row:last-child {
+      border: none;
+    }
+
+    /* CONTACT FORM ---------------------------------------- */
+    form {
+      margin-top: 20px;
+      display: grid;
+      gap: 10px;
+    }
+
+    label {
+      font-size: 14px;
+      margin-bottom: -4px;
+    }
+
+    input,
+textarea {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 8px;
+      background: #15171d;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    textarea { min-height: 80px; resize: vertical; }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #4ade80;
+    }
+
+    #formNote {
+      font-size: 14px;
+      margin-top: 6px;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding-top: 14px;
+      border-top: 1px solid #2a2e37;
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">WildPark</div>
+
+    <nav>
+      <a href="#animals">Животные</a>
+      <a href="#tickets">Билеты</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Городской зоопарк «WildPark»</h1>
+      <p>Погрузитесь в мир природы: более 200 видов животных, тематические зоны и безопасный семейный отдых.</p>
+
+      <button class="btn-main" onclick="document.querySelector('#tickets').scrollIntoView({behavior:'smooth'});">
+        Купить билеты
+      </button>
+    </div>
+
+    <div class="hero-photo"></div>
+  </section>
+
+  <!-- ANIMALS -->
+  <section class="section" id="animals">
+    <h2>Наши животные</h2>
+
+    <div class="animals-grid">
+
+      <div class="animal-card">
+        <div class="animal-photo" style="background-image:url('https://images.pexels.com/photos/145939/pexels-photo-145939.jpeg');"></div>
+        <div class="animal-name">Лев</div>
+        <div class="animal-desc">Король саванны. Хищник, живущий прайдами.</div>
+      </div>
+
+      <div class="animal-card">
+        <div class="animal-photo" style="background-image:url('https://images.pexels.com/photos/4754701/pexels-photo-4754701.jpeg');"></div>
+        <div class="animal-name">Панда</div>
+        <div class="animal-desc">Дружелюбное и редкое животное, питается bambu.</div>
+      </div>
+
+      <div class="animal-card">
+        <div class="animal-photo" style="background-image:url('https://images.pexels.com/photos/45170/pexels-photo-45170.jpeg');"></div>
+        <div class="animal-name">Жираф</div>
+        <div class="animal-desc">Самое высокое животное на планете.</div>
+      </div>
+
+      <div class="animal-card">
+        <div class="animal-photo" style="background-image:url('https://images.pexels.com/photos/602616/pexels-photo-602616.jpeg');"></div>
+        <div class="animal-name">Фламинго</div>
+        <div class="animal-desc">Птица с розовым оперением, обитает колониями.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TICKETS -->
+  <section class="section" id="tickets">
+    <h2>Билеты</h2>
+
+    <div class="tickets">
+      <div class="ticket-row">
+        <span>Взрослый</span>
+        <strong>500 ₽</strong>
+      </div>
+      <div class="ticket-row">
+        <span>Детский</span>
+        <strong>250 ₽</strong>
+      </div>
+      <div class="ticket-row">
+        <span>Семейный</span>
+        <strong>1200 ₽</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT FORM -->
+  <section class="section" id="contact">
+    <h2>Связаться с нами</h2>
+
+    <form onsubmit="submitForm(event)">
+      <label>Имя</label>
+      <input id="name" required />
+
+      <label>Телефон</label>
+      <input id="phone" required />
+
+      <label>Сообщение</label>
+      <textarea id="msg" required></textarea>
+
+      <button class="btn-main" type="submit">Отправить</button>
+
+      <div id="formNote"></div>
+    </form>
+  </section>
+
+  <footer>
+    WildPark © 2025 — демонстрационный сайт для Docker
+  </footer>
+
+</div>
+
+<script>
+async function submitForm(e) {
+  e.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const msg = document.getElementById("msg").value.trim();
+
+  const note = document.getElementById("formNote");
+
+  try {
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+body: JSON.stringify({ name, phone, msg })
+    });
+
+    const data = await res.json();
+    note.style.color = data.ok ? "#4ade80" : "#f87171";
+    note.textContent = data.message;
+  } catch (err) {
+    note.style.color = "#f87171";
+    note.textContent = "Ошибка соединения с сервером.";
+  }
+}
+</script>
+
+</body>
+</html>
+
+.
