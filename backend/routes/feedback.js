@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const fetch = require('node-fetch'); // если используется node-fetch v2
+const fetch = require('node-fetch'); // v2
 
 // Получение всех записей (для тестирования)
 router.get('/feedback', (req, res) => {
@@ -21,42 +21,39 @@ router.post('/feedback', (req, res) => {
   }
 
   const stmt = db.prepare('INSERT INTO feedback (name, email, message) VALUES (?, ?, ?)');
-  stmt.run([name, email, message], function(err) {
+  stmt.run([name, email, message], async function(err) {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
 
-    // Отправка в Telegram после успешной записи
-    const botToken = process.env.8462290537:AAENLyTdB_juV82jqWbyMh_anyLXf5ksXtM;
-    const chatId = process.env.997723228;
+    // Формируем текст для Telegram
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+    const text = `Новая заявка обратной связи:\n\nИмя: ${name || '—'}\nEmail: ${email || '—'}\nСообщение:\n${message || '—'}`;
 
-    const sendTelegram = async () => {
-      if (botToken && chatId) {
-        const text = `Новая заявка обратной связи:\n\nИмя: ${name}\nEmail: ${email}\nСообщение:\n${message}`;
-        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-        const payload = { chat_id: chatId, text, parse_mode: 'Markdown' };
+    if (botToken && chatId && text.trim()) {
+      const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+      const payload = { chat_id: chatId, text, parse_mode: 'Markdown' };
 
-        try {
-          const r = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-          });
-          const data = await r.json();
-          // Можно вернуть информацию Telegram вместе с записью
-          return res.json({ id: this.lastID, name, email, message, created_at: new Date().toISOString(), telegram: data });
-        } catch (e) {
-          // Ошибка отправки в Telegram не критична для записи
-          return res.json({ id: this.lastID, name, email, message, created_at: new Date().toISOString(), telegram_error: e.message });
+      try {
+        const r = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await r.json();
+        if (!r.ok || data?.ok === false) {
+          // Не ломаем ответ клиенту, просто пометим Telegram-ошибку
+          return res.json({ id: this.lastID, name, email, message, created_at: new Date().toISOString(), telegram: { ok: false, description: data?.description } });
         }
-      } else {
-        // Telegram не настроен
-        return res.json({ id: this.lastID, name, email, message, created_at: new Date().toISOString(), telegram: 'not configured' });
+        return res.json({ id: this.lastID, name, email, message, created_at: new Date().toISOString(), telegram: data });
+      } catch (e) {
+        return res.json({ id: this.lastID, name, email, message, created_at: new Date().toISOString(), telegram_error: e.message });
       }
-    };
+    }
 
-    // Вызываем отдельно, чтобы не задерживать ответ
-    sendTelegram();
+    // Если Telegram не настроен, просто вернем базовую запись
+    res.json({ id: this.lastID, name, email, message, created_at: new Date().toISOString(), telegram: 'not configured' });
   });
   stmt.finalize();
 });
