@@ -27,8 +27,8 @@ router.post('/feedback', (req, res) => {
     }
 
     // Формируем текст для Telegram
-    const botToken = process.env.TELEGRAM_BOT_TOKEN;
-    const chatId = process.env.TELEGRAM_CHAT_ID;
+    const botToken = process.env.8462290537:AAENLyTdB_juV82jqWbyMh_anyLXf5ksXtM;
+    const chatId = process.env.997723228;
     const text = `Новая заявка обратной связи:\n\nИмя: ${name || '—'}\nEmail: ${email || '—'}\nСообщение:\n${message || '—'}`;
 
     if (botToken && chatId && text.trim()) {
