@@ -1,7 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
-const fetch = require('node-fetch'); // v2
+const path = require('path');
+const sqlite3 = require('sqlite3').verbose();
+
+// Создаем путь к БД
+const dbPath = path.join(__dirname, '..', 'feedback.db');
+const db = new sqlite3.Database(dbPath);
 
 // Получение всех записей (для тестирования)
 router.get('/feedback', (req, res) => {
