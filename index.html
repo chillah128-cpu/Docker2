@@ -337,7 +337,7 @@ async function submitForm(e) {
   const note = document.getElementById("formNote");
 
   try {
-    const res = await fetch("/api/contact", {
+    const res = await fetch("/api/feedback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
 body: JSON.stringify({ name, phone, msg })
