@@ -335,56 +335,21 @@ async function submitForm(e) {
   const msg = document.getElementById("msg").value.trim();
 
   const note = document.getElementById("formNote");
-  
-  // Проверка полей
-  if (!name || !phone || !msg) {
-    note.style.color = "#f87171";
-    note.textContent = "Заполните все поля!";
-    return;
-  }
-
-  note.textContent = "Отправка...";
-  note.style.color = "#fbbf24";
 
   try {
-    // ЯВНО указываем URL backend (порт 8081)
-    const res = await fetch("http://localhost:8081/api/feedback", {
+    const res = await fetch("/api/contact", {
       method: "POST",
-      headers: { 
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ 
-        name: name, 
-        email: phone, // телефон как email
-        message: msg 
-      })
+      headers: { "Content-Type": "application/json" },
+body: JSON.stringify({ name, phone, msg })
     });
 
-    console.log('Статус ответа:', res.status);
-    
-    if (res.ok) {
-      const data = await res.json();
-      note.style.color = "#4ade80";
-      note.textContent = data.message || "Сообщение отправлено успешно!";
-      
-      // Очистить форму
-      document.getElementById("name").value = "";
-      document.getElementById("phone").value = "";
-      document.getElementById("msg").value = "";
-      
-    } else {
-      const error = await res.text();
-      note.style.color = "#f87171";
-      note.textContent = "Ошибка сервера: " + (error || res.status);
-    }
-    
+    const data = await res.json();
+    note.style.color = data.ok ? "#4ade80" : "#f87171";
+    note.textContent = data.message;
   } catch (err) {
-    console.error('Ошибка сети:', err);
     note.style.color = "#f87171";
-    note.textContent = "Ошибка соединения с сервером. Проверьте консоль (F12).";
+    note.textContent = "Ошибка соединения с сервером.";
   }
-  
-  return false;
 }
 </script>
 
