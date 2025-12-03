@@ -340,7 +340,11 @@ async function submitForm(e) {
     const res = await fetch("/api/feedback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-body: JSON.stringify({ name, phone, msg })
+body: JSON.stringify({ 
+  name: name, 
+  email: phone, // телефон как email
+  message: msg 
+})
     });
 
     const data = await res.json();
